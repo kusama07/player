@@ -198,7 +198,7 @@ void Player::Box() {
 					lLetGo = false;
 					if (bButtonReleased_) {
 						BoxType* boxRed_ = new BoxType;
-						bulletOffset.x += 2.0f;
+						bulletOffset.x += 2.1f;
 						// 弾の位置を計算してオフセットを適用
 						Vector3 bulletPosition = Add(worldTransform_.translation_, bulletOffset);
 
@@ -218,7 +218,7 @@ void Player::Box() {
 					rLetGo = false;
 					if (bButtonReleased_) {
 						BoxType* boxRed_ = new BoxType;
-						bulletOffset.x -= 2.0f;
+						bulletOffset.x -= 2.1f;
 						// 弾の位置を計算してオフセットを適用
 						Vector3 bulletPosition = Add(worldTransform_.translation_, bulletOffset);
 
@@ -243,7 +243,7 @@ void Player::Box() {
 				TIM--;
 
 				if (TIM <= 0) {
-				boxSpeedRed = 2.0f;
+				boxSpeedRed = 1.5f;
 				}
 			}
 		}
@@ -259,7 +259,7 @@ void Player::Box() {
 					lLetGo = false;
 					if (bButtonReleased_) {
 						BoxType* boxBlue_ = new BoxType;
-						bulletOffset.x += 2.0f;
+						bulletOffset.x += 2.1f;
 						// 弾の位置を計算してオフセットを適用
 						Vector3 bulletPosition = Add(worldTransform_.translation_, bulletOffset);
 
@@ -280,7 +280,7 @@ void Player::Box() {
 					rLetGo = false;
 					if (bButtonReleased_) {
 						BoxType* boxBlue_ = new BoxType;
-						bulletOffset.x -= 2.0f;
+						bulletOffset.x -= 2.1f;
 						// 弾の位置を計算してオフセットを適用
 						Vector3 bulletPosition = Add(worldTransform_.translation_, bulletOffset);
 
@@ -306,7 +306,7 @@ void Player::Box() {
 				bulletOffset.x = 0.0f;
 				TIM--;
 				if (TIM <= 0) {
-				boxSpeedBulue = 2.0f;
+				boxSpeedBulue = 1.5f;
 				}
 			}
 		}
@@ -325,16 +325,18 @@ void Player::hitBox() {
 	// PlayerのAABBを取得
 	AABB playerAABB = GetAABB();
 
-	// 赤の箱に対しての処理
+	 // 赤い箱との衝突をチェック
 	for (BoxType* box : REDs_) {
-		// BoxTypeのAABBを取得
 		AABB boxAABB = box->GetAABB();
-
-		// PlayerとBoxのAABBが交差しているか判定
 		if (IsCollision(playerAABB, boxAABB)) {
-			// PlayerがBoxの上にいる場合、PlayerのY座標をBoxの上に調整
+			// プレイヤーは箱の上にいるので、プレイヤーの位置を調整
 			float newPlayerY = boxAABB.max.y + playerHeight_ / 2;
 			AdjustPositionOnBox(newPlayerY);
+
+			// プレイヤーを箱と一緒に移動させる
+			Vector3 boxMovement = box->GetMovement();
+			worldTransform_.translation_ = Add(worldTransform_.translation_, boxMovement);
+			worldTransform_.UpdateMatrix();
 		}
 	}
 
@@ -342,12 +344,16 @@ void Player::hitBox() {
 	for (BoxType* box : BLUEs_) {
 		// BoxTypeのAABBを取得
 		AABB boxAABB = box->GetAABB();
-
 		// PlayerとBoxのAABBが交差しているか判定
 		if (IsCollision(playerAABB, boxAABB)) {
 			// PlayerがBoxの上にいる場合、PlayerのY座標をBoxの上に調整
 			float newPlayerY = boxAABB.max.y + playerHeight_ / 2;
 			AdjustPositionOnBox(newPlayerY);
+
+			// プレイヤーを箱と一緒に移動させる
+			Vector3 boxMovement = box->GetMovement();
+			worldTransform_.translation_ = Add(worldTransform_.translation_, boxMovement);
+			worldTransform_.UpdateMatrix();
 		}
 	}
 }

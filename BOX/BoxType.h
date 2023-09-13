@@ -27,6 +27,8 @@ public:
 
 	AABB GetAABB();
 
+	Vector3 GetMovement() const;
+
 private:
 	
 	uint32_t Box_ = 0;
@@ -37,4 +39,6 @@ private:
 	float boxWidth_ = 2.0f;
 	float boxHeight_ = 2.0f;
 	float boxDepth_ = 2.0f;
+
+	Vector3 movement_;
 };
